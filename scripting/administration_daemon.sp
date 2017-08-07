@@ -259,7 +259,10 @@ public Action Event_Check(Event hEvent, const char[] szBroadcast, bool bBroadcas
 
 public void OnClientSettingsChanged(int iClient)
 {
-	SetTag(iClient);
+	if(IsClientInGame(iClient))
+	{
+		SetTag(iClient);
+	}
 }
 
 stock void SetTag(int iClient)
