@@ -37,6 +37,11 @@ public Action Timer_Connect(Handle hTimer, int iSerial)
                 return Plugin_Stop;
         }
 
+        if(!Player_IsVIP(iClient))
+        {
+            return Plugin_Stop;
+        }
+
         int iRandom = -1;
         do
         {

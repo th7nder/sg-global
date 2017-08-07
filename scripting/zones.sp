@@ -2220,8 +2220,13 @@ public Action:Timer_ShowZones(Handle:timer)
 					// Otherwise always show zones if plugin is set it to true
 					else if (GetConVarBool(show_zones) && (team == CS_TEAM_NONE || (GetClientTeam(client) == team)))
 					{
-						// Also dont show friendly zones at all
-						TE_SendBeamBoxToClient(client, pos1, pos2, LaserMaterial, HaloMaterial, 0, 30, LIFETIME_INTERVAL, 5.0, 5.0, 2, 1.0, TeamColors[team], 0);
+						char szName[64];
+						GetArrayString(hZone, ZONE_NAME, szName, sizeof(szName));
+						if(StrContains(szName, "anticamp") == -1)
+						{
+							TE_SendBeamBoxToClient(client, pos1, pos2, LaserMaterial, HaloMaterial, 0, 30, LIFETIME_INTERVAL, 5.0, 5.0, 2, 1.0, TeamColors[team], 0);	
+						}
+
 					}
 				}
 			}
