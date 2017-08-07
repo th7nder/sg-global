@@ -226,11 +226,56 @@ public void OnPluginStart(){
 		CreateTimer(15.0, Timer_ShowAdverts, _, TIMER_REPEAT);
 	}
 
+	HookEvent("player_spawn", Event_Check);
+	HookEvent("player_team", Event_Check);
+
+	AddCommandListener(Command_Recheck, "jointeam");
+	AddCommandListener(Command_Recheck, "joinclass");
+	AddCommandListener(Command_Recheck, "spec_mode");
+	AddCommandListener(Command_Recheck, "spec_next");
+	AddCommandListener(Command_Recheck, "spec_player");
+	AddCommandListener(Command_Recheck, "spec_prev");
+
 	Chat_OnPluginStart();
 
 }
-// .+?(?=Surf)
 
+public Action Command_Recheck(int iClient, char[] szCommand, int iArgs) 
+{
+	if(IsClientInGame(iClient) && !IsClientSourceTV(iClient))
+	{
+		SetTag(iClient);
+	}
+
+
+	return Plugin_Continue;
+}
+// .+?(?=Surf)
+public Action Event_Check(Event hEvent, const char[] szBroadcast, bool bBroadcast)
+{
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	SetTag(iClient);
+}
+
+public void OnClientSettingsChanged(int iClient)
+{
+	SetTag(iClient);
+}
+
+stock void SetTag(int iClient)
+{
+	char szTag[64];
+	Format(szTag, sizeof(szTag), g_szPrefix[iClient]);
+	PurgePlayerChat(szTag);
+	if(strlen(szTag) > 3)
+	{
+		CS_SetClientClanTag(iClient, szTag);
+	}
+	else
+	{
+		CS_SetClientClanTag(iClient, "[Gracz]");
+	}
+}
 public Action Timer_ShowAdverts(Handle hTimer){
 	int iSize = GetArraySize(g_hAdvertisements);
 	if(iSize){
