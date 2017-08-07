@@ -1,0 +1,149 @@
+//**********************************************  Valid Colors	***********************************************
+
+// {NORMAL}, {DARKRED}, {PINK}, {YELLOW}, {GREEN}, {LIGHTGREEN}, {RED}, {GRAY}, {BLUE}, {DARKBLUE}, {PURPLE}  *
+
+//*************************************************************************************************************
+
+
+
+"Phrases"
+
+{
+
+	"Show damage menu settings"
+	{
+		"en"			"Menu: Show Damage"
+		"fr"			"Menu: Affichage des dommages"
+		"tr"			"Menü: Hasarı Göster"
+		"ru"			"Menu: Отображения нанесенного урона"
+	}
+	"Show damage menu settings message"
+	{
+		"#format"		"{1:s}"
+		"en"			"Show Damage: {1}"
+		"fr"			"Affichage des dommages: {1}"
+		"tr"			"Hasarı Göster: {1}"
+		"ru"			"Нанесенный урон: {1}"
+	}
+	"Head"
+	{
+        "en"			"Head"
+		"fr"			"Tête"
+		"tr"			"Kafa"
+		"ru"			"Голова"
+	}
+	"Chest"
+	{
+       	"en"			"Chest"
+		"fr"			"Poitrine"
+		"tr"			"Gövde"
+		"ru"			"Грудь"
+	}
+	"Stomach"
+	{
+       	"en"			"Stomach"
+		"fr"			"Ventre"
+		"tr"			"Karın"
+		"ru"			"Желудок"
+	}
+	"Left arm"
+	{
+       	"en"			"Left arm"
+		"fr"			"Bras gauche"
+		"tr"			"Sol el"
+		"ru"			"Левая рука"
+	}
+	"Right arm"
+	{
+       	"en"			"Right arm"
+		"fr"			"Bras droit"
+		"tr"			"Sağ el"
+		"ru"			"Правая рука"
+	}
+	"Left leg"
+	{
+       	"en"			"Left leg"
+		"fr"			"Jambe gauche"
+		"tr"			"Sol ayak"
+		"ru"			"Левая нога"
+	}
+	"Right leg"
+	{
+      	"en"			"Right leg"
+		"fr"			"Jambe droite"
+		"tr"			"Sağ ayak"
+		"ru"			"Правая нога"
+	}
+	"Enabled"
+	{
+      	"en"			"Enabled"
+		"fr"			"Activé"
+		"tr"			"Açık"
+		"ru"			"Включено"
+	}
+	"Disabled"
+	{
+      	"en"			"Disabled"
+		"fr"			"Désactivé"
+		"tr"			"Kapalı"
+		"ru"			"Выключено"
+	}
+	"ShowDamage_TITLE"
+	{
+      	"en"			"Menu: Show Damage"
+		"fr"			"Menu: Notifications des dommages"
+		"tr"			"Menu: Show Damage"
+		"ru"			"Menu: Нанесенный урон"
+	}
+	"ShowDamage_HUD_MENU_TITLE"
+	{
+		"#format"		"{1:s}"
+      	"en"			"Show Damage: {1}"
+		"fr"			"Montrer les dommages: {1}"
+		"tr"			"Hasarı Göster: {1}"
+		"ru"			"Нанесенный урон: {1}"
+	}
+	"Show damage hit message body"
+	{
+		"#format"		"{1:s},{2:i},{3:i}"
+       	"en"			"{1} \nHealth: -{2} | Armor: -{3}"
+		"fr"			"{1} \nVie: -{2} | Armure: -{3}"
+		"tr"			"{1} \nCan: -{2} | Zırh: -{3}" 
+		"ru"			"{1} \nЗдоровье: -{2} | Броня: -{3}"
+	}
+	"Show damage hit message"
+	{
+		"#format"		"{1:i}"
+       		"en"		"-{1}"
+		"fr"			"-{1}"
+		"tr"			"-{1}"
+		"ru"			"-{1}"
+	}	
+
+	"Show damage inferno"
+	{
+		"#format"		"{1:i},{2:i},{3:i}"
+       	"en"			"Total molotov damage. \nVictims: {1} \nHealth: -{2} | Armor: -{3}"
+		"fr"			"Total des dommages de la molotov \nVictimes: {1} \nVie: -{2} | Armure: -{3}"
+		"tr"			"Toplam molotof hasarı. \nEtkilenenler: {1} \nCan: -{2} | Zırh: -{3}"
+		"ru"			"Всего молотов нанес урона. \nЖертв: {1} \nЗдоровье: -{2} | Броня: -{3}"
+	}
+
+	"Show damage hegrenade"
+	{
+		"#format"		"{1:i},{2:i},{3:i}"
+       	"en"			"Total hegrenade damage. \nVictims: {1} \nHealth: -{2} | Armor: -{3}"
+		"fr"			"Total des dommages de la grenade \nVictimes: {1}\nVie: -{2} | Armure: -{3}"
+		"tr"			"Toplam el bombası hasar. \nEtkilenenler: {1} \nCan: -{2} | Zırh: -{3}"
+		"ru"			"Всего граната нанесла урона. \nЖертв: {1} \nЗдоровье: -{2} | Броня: -{3}"
+	}
+	"Show damage multiple"
+	{
+		"#format"		"{1:s},{2:i},{3:i},{4:i}"
+       	"en"			"Total {1} damage. \nVictims: {2} \nHealth: -{3} | Armor: -{4}"
+		"fr"			"Total des dommages {1} \nVictimes: {2}\nVie: -{3} |  Armure: -{4}"
+		"tr"			"Toplam {1} hasar. \nEtkilenenler: {2} \nCan: -{3} | Zırh: -{4}"
+		"ru"			"Всего		{1} нанесено урона. \nЖертв: {2} \nЗдоровье: -{3} | Броня: -{4}"
+	}
+}
+
