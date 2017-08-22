@@ -9,10 +9,10 @@ public Action OnChatMessage(int &iClient, Handle hRecipients, char[] szName, cha
 	}*/ 
 	PurgePlayerChat(szMessage);
 	if(strlen(g_szPrefix[iClient]) > 1){
-	  	Format(szName, 128, "  %s%s%s", g_szNickPrefix[iClient], g_szPrefix[iClient], szName);
+	  	Format(szName, 128, " \x01\x0B\x01%s%s%s", g_szNickPrefix[iClient], g_szPrefix[iClient], szName);
 	  	Format(szMessage, (MAXLENGTH_MESSAGE - strlen(szName) - 5), "%s%s", g_szChatColor[iClient], szMessage);
 	} else {
-		Format(szName, 128, "  %s\x03%s", g_szNickPrefix[iClient], szName);
+		Format(szName, 128, " \x01\x0B\x01%s\x03%s", g_szNickPrefix[iClient], szName);
 	}
 
 	return Plugin_Changed;

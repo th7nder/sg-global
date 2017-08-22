@@ -9,7 +9,7 @@
 //#include <codmod301>
 
 #define FUNCTION_OFFSET 466
-#define GetPlayerMaxSpeed_OFFSET 498
+#define GetPlayerMaxSpeed_OFFSET 499
 
 #define CSAddon_NONE            0
 #define CSAddon_Flashbang1      (1<<0)
