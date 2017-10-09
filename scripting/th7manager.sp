@@ -9,6 +9,8 @@
 //#include <codmod301>
 
 #define FUNCTION_OFFSET 466
+#define SPREAD_OFFSET 467
+
 #define GetPlayerMaxSpeed_OFFSET 499
 
 #define CSAddon_NONE            0
@@ -37,6 +39,7 @@ bool g_bSilentFootsteps[MAXPLAYERS+1] = {false};
 bool g_bItemFootsteps[MAXPLAYERS+1] = {false};
 bool g_bHalfVisible[MAXPLAYERS+1] = {false};
 Handle g_hGetInaccuracy = INVALID_HANDLE;
+Handle g_hGetSpread = INVALID_HANDLE;
 
 
 
@@ -301,6 +304,7 @@ Handle g_hCvarFootsteps = INVALID_HANDLE;
 
 public OnPluginStart(){
     g_hGetInaccuracy = DHookCreate(FUNCTION_OFFSET, HookType_Entity, ReturnType_Float, ThisPointer_CBaseEntity, DHook_GetInaccuracy);
+    g_hGetSpread = DHookCreate(SPREAD_OFFSET, HookType_Entity, ReturnType_Float, ThisPointer_CBaseEntity, DHook_GetInaccuracy);
     g_hGetPlayerMaxSpeed = DHookCreate(GetPlayerMaxSpeed_OFFSET, HookType_Entity, ReturnType_Float, ThisPointer_CBaseEntity, DHook_GetPlayerMaxSpeed);
 
     RegAdminCmd("nrc", Command_ToggleNRC, ADMFLAG_ROOT);
@@ -330,6 +334,8 @@ public OnClientPutInServer(iClient){
     if(IsFakeClient(iClient)){
         return;
     }
+
+
     g_bEnableNoRecoil[iClient] = false;
     g_bEnableItemNoRecoil[iClient] = false;
     g_bSilentFootsteps[iClient] = false;
@@ -480,6 +486,8 @@ void HookWeapon(int iClient, int iWeapon){
 
                 g_bHooked[iWeapon] = true;
                 DHookEntity(g_hGetInaccuracy, true, iWeapon);
+                DHookEntity(g_hGetSpread, true, iWeapon);
+
             }
 
 
