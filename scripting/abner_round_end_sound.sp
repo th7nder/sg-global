@@ -33,35 +33,37 @@ public Plugin:myinfo =
 
 
 char g_szSoundNames[][] = {
-	"Sierpien01.mp3",
-	"Sierpien02.mp3",
-	"Sierpien03.mp3",
-	"Sierpien04.mp3",
-	"Sierpien05.mp3",
-	"Sierpien06.mp3",
-	"Sierpien07.mp3",
-	"Sierpien08.mp3",
-	"Sierpien09.mp3",
-	"Sierpien10.mp3",
-	"Sierpien11.mp3",
-	"Sierpien12.mp3",
-	"Sierpien13.mp3"
+	"Wrzesien01.mp3",
+	"Wrzesien02.mp3",
+	"Wrzesien03.mp3",
+	"Wrzesien04.mp3",
+	"Wrzesien05.mp3",
+	"Wrzesien06.mp3",
+	"Wrzesien07.mp3",
+	"Wrzesien08.mp3",
+	"Wrzesien09.mp3",
+	"Wrzesien10.mp3",
+	"Wrzesien11.mp3",
+	"Wrzesien12.mp3",
+	"Wrzesien13.mp3",
+	"Wrzesien14.mp3"
 };
 
 char g_szSoundTracks[][] = {
-	"AronChupa, Little Sis Nora - Llama In My Living Room",
-	"Scooter - Fire",
-	"Sawai Miku - Colorful (Asterisk Remix)",
-	"Pentakill - Lightbringer",
-	"Nils Van Zandt & Nicci - Up And Down",
-	"Disciples - On My Mind",
-	"Linkin Park - Talking To Myself",
-	"Coolio- Gangster's Paradise",
-	"Calvin Harris - Feel So Close",
-	"B-Complex - Beautiful Lies",
-	"Akcent - Jokero",
-	"Kuban - Nadzieja głupich",
-	"Taco Hemingway - Bardzo Proszę! (SzUsty Blend)",
+"Deficio - Egyptica",
+"Yesterday - Imagine Dragons",
+"Imagine Dragons ? I’ll Make It Up To You",
+"Taco Hemingway - \"Głupi byt\" (prod. Rumak)",
+"Taco Hemingway - Chodź (prod. Zeppy Zep)",
+"Joji - rain on me",
+"Young Lungs- Paranoia",
+"Higher Brothers + joji - Nomadic",
+"Kr8 x CandyCrash - Portamento (Original Mix)",
+"ReTo ft. Smolasty - Czemu nie (prod. Deemz)",
+"Royal Blood - I Only Lie When I Love You", 
+"Szpaku feat. Paluch BORuto prod. 2K & Loren",
+"Ta-ku - Higher (Flume Remix)",
+"Young Thug - Swizz Beatz",
 };
 
 
@@ -71,7 +73,7 @@ public OnPluginStart()
 {
 	//Cvars
 	CreateConVar("abner_round_end_version", PLUGIN_VERSION, "Version of the plugin", FCVAR_NOTIFY|FCVAR_REPLICATED);
-	g_hTRPath = CreateConVar("tr_music_path_august17", "serwery-go/August17", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
+	g_hTRPath = CreateConVar("tr_music_path_october17", "serwery-go/october17", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
 
 	//ClientPrefs
 	g_AbNeRCookie = RegClientCookie("RoundSound Sounds", "", CookieAccess_Private);
@@ -90,7 +92,7 @@ public OnPluginStart()
     }
 
 	//Arquivo de configuraçăo
-	AutoExecConfig(true, "abner_august17");
+	AutoExecConfig(true, "abner_october17");
 
 	RegAdminCmd("sound_load", CommandLoad, ABNER_ADMINFLAG);
 
@@ -188,7 +190,7 @@ int GetSoundID(char[] szName){
 	int iSize = sizeof(g_szSoundNames);
 	char szTemp[128];
 	for(int i = 0; i < iSize; i++){
-		Format(szTemp, 128, "serwery-go/August17/%s", g_szSoundNames[i]);
+		Format(szTemp, 128, "serwery-go/october17/%s", g_szSoundNames[i]);
 		if(StrEqual(szName, szTemp)){
 			return i;
 		}
