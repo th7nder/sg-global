@@ -33,37 +33,47 @@ public Plugin:myinfo =
 
 
 char g_szSoundNames[][] = {
-	"Wrzesien01.mp3",
-	"Wrzesien02.mp3",
-	"Wrzesien03.mp3",
-	"Wrzesien04.mp3",
-	"Wrzesien05.mp3",
-	"Wrzesien06.mp3",
-	"Wrzesien07.mp3",
-	"Wrzesien08.mp3",
-	"Wrzesien09.mp3",
-	"Wrzesien10.mp3",
-	"Wrzesien11.mp3",
-	"Wrzesien12.mp3",
-	"Wrzesien13.mp3",
-	"Wrzesien14.mp3"
+	"",
+	"Listopad01.mp3",
+	"Listopad02.mp3",
+	"Listopad03.mp3",
+	"Listopad04.mp3",
+	"Listopad05.mp3",
+	"Listopad06.mp3",
+	"Listopad07.mp3",
+	"Listopad08.mp3",
+	"Listopad09.mp3",
+	"Listopad10.mp3",
+	"Listopad11.mp3",
+	"Listopad12.mp3",
+	"Listopad13.mp3",
+	"Listopad14.mp3",
+	"Listopad15.mp3",
+	"Listopad16.mp3",
+	"Listopad17.mp3",
 };
 
 char g_szSoundTracks[][] = {
-"Deficio - Egyptica",
-"Yesterday - Imagine Dragons",
-"Imagine Dragons ? I’ll Make It Up To You",
-"Taco Hemingway - \"Głupi byt\" (prod. Rumak)",
-"Taco Hemingway - Chodź (prod. Zeppy Zep)",
-"Joji - rain on me",
-"Young Lungs- Paranoia",
-"Higher Brothers + joji - Nomadic",
-"Kr8 x CandyCrash - Portamento (Original Mix)",
-"ReTo ft. Smolasty - Czemu nie (prod. Deemz)",
-"Royal Blood - I Only Lie When I Love You", 
-"Szpaku feat. Paluch BORuto prod. 2K & Loren",
-"Ta-ku - Higher (Flume Remix)",
-"Young Thug - Swizz Beatz",
+	"",
+"21 Savage - Gucci On My ft. YG & Migos",
+"joji - Medicine",
+"joji - Will he",
+"Miami Nights 1984 - Running In The 80's",
+"Taco Hemingway - WIATR",
+"Travis Scott - goosebumps ft. Kendrick Lamar",
+"KEEMSTAR -Dollar In The Woods!",
+"Jon Bellion - All Time Low",
+"BIG SHAQ - MANS NOT HOT",
+"Two Feet - Go Fck Yourself",
+"Trap Sylvan Esso - Hey Mami (Big Wild Remix)",
+"MYRNE - Confessions (feat. Cozi Zuehlsdorff)",
+"Robotaki - Monkey Bars (feat. Claire Ridgely)",
+"MACKLEMORE FEAT SKYLAR GREY - GLORIOUS",
+"Headphone Activist - Haiku",
+"Extra Terra & Urbanstep - Lost In Time",
+"iDubbbz - Asian Jake Paul (XXXTentacion MashUp)",
+"Imagine Dragons - Rise Up",
+"Post Malone feat. 21 Savage - rockstar",
 };
 
 
@@ -73,7 +83,7 @@ public OnPluginStart()
 {
 	//Cvars
 	CreateConVar("abner_round_end_version", PLUGIN_VERSION, "Version of the plugin", FCVAR_NOTIFY|FCVAR_REPLICATED);
-	g_hTRPath = CreateConVar("tr_music_path_october17", "serwery-go/october17", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
+	g_hTRPath = CreateConVar("tr_music_path_november17", "serwery-go/november17", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
 
 	//ClientPrefs
 	g_AbNeRCookie = RegClientCookie("RoundSound Sounds", "", CookieAccess_Private);
@@ -92,7 +102,7 @@ public OnPluginStart()
     }
 
 	//Arquivo de configuraçăo
-	AutoExecConfig(true, "abner_october17");
+	AutoExecConfig(true, "abner_november17");
 
 	RegAdminCmd("sound_load", CommandLoad, ABNER_ADMINFLAG);
 
@@ -190,7 +200,7 @@ int GetSoundID(char[] szName){
 	int iSize = sizeof(g_szSoundNames);
 	char szTemp[128];
 	for(int i = 0; i < iSize; i++){
-		Format(szTemp, 128, "serwery-go/october17/%s", g_szSoundNames[i]);
+		Format(szTemp, 128, "serwery-go/november17/%s", g_szSoundNames[i]);
 		if(StrEqual(szName, szTemp)){
 			return i;
 		}
