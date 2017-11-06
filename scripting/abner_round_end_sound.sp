@@ -209,7 +209,7 @@ int GetSoundID(char[] szName){
 }
 PlaySoundTR()
 {
-	new rnd_sound = GetRandomInt(0, 20);
+	new rnd_sound = GetRandomInt(1, sizeof(g_szSoundNames));
 	if(SoundsTRSucess)
 	{
 		PrintToChatAll("  \x0A Teraz gramy: \x0B %s", g_szSoundTracks[GetSoundID(soundtr[rnd_sound])] );
