@@ -33,7 +33,6 @@ public Plugin:myinfo =
 
 
 char g_szSoundNames[][] = {
-	"",
 	"Listopad01.mp3",
 	"Listopad02.mp3",
 	"Listopad03.mp3",
@@ -54,7 +53,6 @@ char g_szSoundNames[][] = {
 };
 
 char g_szSoundTracks[][] = {
-	"",
 "21 Savage - Gucci On My ft. YG & Migos",
 "joji - Medicine",
 "joji - Will he",
