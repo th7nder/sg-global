@@ -395,7 +395,7 @@ public Callback_FetchAdverts(Handle hOwner, Handle hResult, const char[] szError
 	char szText[256];
 	while(SQL_FetchRow(hResult)){
 		SQL_FetchString(hResult, 0, STRING(szText));
-		LogError(szText)
+		PrintToServer(szText)
 		PushArrayString(g_hAdvertisements, szText);
 	}
 
