@@ -267,6 +267,9 @@ public void OnClientSettingsChanged(int iClient)
 
 stock void SetTag(int iClient)
 {
+	if(IsFakeClient(iClient))
+		return;
+
 	char szTag[64];
 	Format(szTag, sizeof(szTag), g_szPrefix[iClient]);
 	PurgePlayerChat(szTag);
@@ -392,6 +395,7 @@ public Callback_FetchAdverts(Handle hOwner, Handle hResult, const char[] szError
 	char szText[256];
 	while(SQL_FetchRow(hResult)){
 		SQL_FetchString(hResult, 0, STRING(szText));
+		LogError(szText)
 		PushArrayString(g_hAdvertisements, szText);
 	}
 
