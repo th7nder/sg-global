@@ -79,7 +79,7 @@ public Action Timer_sec(Handle hTimer) {
 public void SpecListMenuAlive(int iClient) // What player sees
 {
 
-	if (IsFakeClient(iClient) || GetClientMenu(iClient) != MenuSource_None)
+	if (IsFakeClient(iClient))
 		return;
 
 	//Spec list for players
