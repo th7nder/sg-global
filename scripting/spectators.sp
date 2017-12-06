@@ -91,7 +91,7 @@ public void SpecListMenuAlive(int iClient) // What player sees
 	count = 0;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsValidClient(i) && !IsFakeClient(iClient) && !IsPlayerAlive(i) && g_bSpectate[i])
+		if (IsValidClient(i) && !IsFakeClient(iClient) && !IsPlayerAlive(i) && g_bSpectate[i] && !IsClientSourceTV(i))
 		{
 			if(g_bAdminStealth) {
 				if(AdminStealth_IsInvisible(i)) {
