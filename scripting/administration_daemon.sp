@@ -451,7 +451,7 @@ public Callback_Connect(Handle hOwner, Handle hResult, const char[] szError, any
 	}
 
 	g_hDatabase = CloneHandle(hResult);
-	SQL_SetCharset(g_hDatabase, "utf8mb4");
+	SQL_SetCharset(g_hDatabase, "utf8");
 	StartFetching();
 }
 
