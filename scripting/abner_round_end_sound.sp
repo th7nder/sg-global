@@ -33,45 +33,33 @@ public Plugin:myinfo =
 
 
 char g_szSoundNames[][] = {
-	"Listopad01.mp3",
-	"Listopad02.mp3",
-	"Listopad03.mp3",
-	"Listopad04.mp3",
-	"Listopad05.mp3",
-	"Listopad06.mp3",
-	"Listopad07.mp3",
-	"Listopad08.mp3",
-	"Listopad09.mp3",
-	"Listopad10.mp3",
-	"Listopad11.mp3",
-	"Listopad12.mp3",
-	"Listopad13.mp3",
-	"Listopad14.mp3",
-	"Listopad15.mp3",
-	"Listopad16.mp3",
-	"Listopad17.mp3",
+	"1.mp3",
+	"2.mp3",
+	"3.mp3",
+	"4.mp3",
+	"5.mp3",
+	"6.mp3",
+	"7.mp3",
+	"8.mp3",
+	"9.mp3",
+	"10.mp3",
+	"11.mp3",
+	"12.mp3",
 };
 
 char g_szSoundTracks[][] = {
-"21 Savage - Gucci On My ft. YG & Migos",
-"joji - Medicine",
-"joji - Will he",
-"Miami Nights 1984 - Running In The 80's",
-"Taco Hemingway - WIATR",
-"Travis Scott - goosebumps ft. Kendrick Lamar",
-"KEEMSTAR -Dollar In The Woods!",
-"Jon Bellion - All Time Low",
-"BIG SHAQ - MANS NOT HOT",
-"Two Feet - Go Fck Yourself",
-"Trap Sylvan Esso - Hey Mami (Big Wild Remix)",
-"MYRNE - Confessions (feat. Cozi Zuehlsdorff)",
-"Robotaki - Monkey Bars (feat. Claire Ridgely)",
-"MACKLEMORE FEAT SKYLAR GREY - GLORIOUS",
-"Headphone Activist - Haiku",
-"Extra Terra & Urbanstep - Lost In Time",
-"iDubbbz - Asian Jake Paul (XXXTentacion MashUp)",
-"Imagine Dragons - Rise Up",
-"Post Malone feat. 21 Savage - rockstar",
+	"Chris Rea - Driving home for christmas",
+	"weedmau5 - Jingle Bells (2015)",
+	"Wham! - Last Christmas ",
+	"Paul McCartney - Wonderful Christmas Time",
+	"John Lennon - Happy Christmas",
+	"Shakin' Stevens - Merry Christmas Everyone (Krysiek Remix)",
+	"Krysiek & Marshall - Gdy się Chrystus rodzi",
+	"Czerwone gitary - jest taki dzień ! + text",
+	"Shakin Stevens - Merry Christmas Everyone",
+	" Coca-Cola Christmas Song by Melanie Thornton - Wonderful Dream Holidays Are Coming",
+	" Train - Shake up Christmas",
+	" Dean Martin - Let it Snow!",
 };
 
 
@@ -81,7 +69,7 @@ public OnPluginStart()
 {
 	//Cvars
 	CreateConVar("abner_round_end_version", PLUGIN_VERSION, "Version of the plugin", FCVAR_NOTIFY|FCVAR_REPLICATED);
-	g_hTRPath = CreateConVar("tr_music_path_november17", "serwery-go/november17", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
+	g_hTRPath = CreateConVar("tr_music_path_grudzien17", "serwery-go/grudzien17", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
 
 	//ClientPrefs
 	g_AbNeRCookie = RegClientCookie("RoundSound Sounds", "", CookieAccess_Private);
@@ -100,7 +88,7 @@ public OnPluginStart()
     }
 
 	//Arquivo de configuraçăo
-	AutoExecConfig(true, "abner_november17");
+	AutoExecConfig(true, "abner_grudzien17");
 
 	RegAdminCmd("sound_load", CommandLoad, ABNER_ADMINFLAG);
 
@@ -198,7 +186,7 @@ int GetSoundID(char[] szName){
 	int iSize = sizeof(g_szSoundNames);
 	char szTemp[128];
 	for(int i = 0; i < iSize; i++){
-		Format(szTemp, 128, "serwery-go/november17/%s", g_szSoundNames[i]);
+		Format(szTemp, 128, "serwery-go/grudzien17/%s", g_szSoundNames[i]);
 		if(StrEqual(szName, szTemp)){
 			return i;
 		}
