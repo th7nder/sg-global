@@ -49,7 +49,8 @@ public void OnClientDisconnect(int iClient) {
 	if(Player_IsAdmin(iClient)) {
 		char szQuery[256];
 		char szAuthID[64];
-		if(GetClientAuthId(iClient, AuthId_Steam2, szAuthID, 64))
+		int iCurrTime = GetTime();
+		if(GetClientAuthId(iClient, AuthId_Steam2, szAuthID, 64) && iCurrTime > g_iJoinTime[iClient])
 		{
 			Format(szQuery, 256, "INSERT INTO `ad_admin_times` (steamid, connect, disconnect, ip, port) VALUES ('%s', %i, %i, '%s', '%i')", szAuthID, g_iJoinTime[iClient], GetTime(), g_szIP, g_iHostPort);
 			g_hDb.Query(T_nothing, szQuery);
