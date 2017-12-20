@@ -20,6 +20,14 @@ public void OnPluginStart() {
 	int m_unIP = GetConVarInt(FindConVar("hostip"));
 	Format(g_szIP, sizeof(g_szIP), "%d.%d.%d.%d", (m_unIP >> 24) & 0x000000FF, (m_unIP >> 16) & 0x000000FF, (m_unIP >> 8) & 0x000000FF, m_unIP & 0x000000FF);
 	g_iHostPort = GetConVarInt(FindConVar("hostport"));
+
+	for(int i = 1; i <= MaxClients; i++)
+	{
+		if(IsClientInGame(i))
+		{
+			OnClientPutInServer(i);
+		}
+	}
 }
 
 public void GotDatabase(Database db, const char[] error, any data) {
