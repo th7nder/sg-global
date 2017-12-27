@@ -43,6 +43,8 @@ Handle g_hGetSpread = INVALID_HANDLE;
 
 
 
+
+Address g_aCanBeSpotted;
 enum RenderColor {
     R = 0,
     G,
@@ -281,7 +283,19 @@ public Native_GetHalfInvisible(Handle hPlugin, int iNumParams){
 public Native_SetRadarVisibility(Handle hPlugin, int iNumParams){
     int iClient = GetNativeCell(1);
     if(IsValidPlayer(iClient)){
-        g_bRadarVisibility[iClient] = view_as<bool>(GetNativeCell(2));
+        bool bVisible = view_as<bool>(GetNativeCell(2));
+        g_bRadarVisibility[iClient] = bVisible;
+        if(bVisible)
+        {
+            StoreToAddress(GetEntityAddress(iClient)+g_aCanBeSpotted, 9, NumberType_Int32);
+        }
+        else
+        {
+            StoreToAddress(GetEntityAddress(iClient)+g_aCanBeSpotted, 0, NumberType_Int32);
+            SetEntProp(iClient, Prop_Send, "m_bSpotted", false);
+            SetEntProp(iClient, Prop_Send, "m_bSpottedByMask", 0, 4, 0);
+            SetEntProp(iClient, Prop_Send, "m_bSpottedByMask", 0, 4, 1);
+        }
     }
 }
 
@@ -324,6 +338,12 @@ public OnPluginStart(){
             OnClientPutInServer(iClient);
         }
     }
+
+    int offset = FindSendPropInfo("CBaseEntity", "m_bSpotted");
+    if (offset <= 0)
+        SetFailState("Can't get m_bSpotted offset");
+    PrintToServer("Address: %d", offset - 4);
+    g_aCanBeSpotted = view_as<Address>(offset - 4);
 }
 
 public OnMapStart(){
