@@ -108,34 +108,6 @@ public int Native_SetNickPrefix(Handle hPlugin, int iNumParams){
 	return 0;
 }
 
-stock bool:File_Copy(const String:source[], const String:destination[])
-{
-	new Handle:file_source = OpenFile(source, "rb");
-
-	if (file_source == INVALID_HANDLE) {
-		return false;
-	}
-
-	new Handle:file_destination = OpenFile(destination, "wb");
-
-	if (file_destination == INVALID_HANDLE) {
-		CloseHandle(file_source);
-		return false;
-	}
-
-	new buffer[32];
-	new cache;
-
-	while (!IsEndOfFile(file_source)) {
-		cache = ReadFile(file_source, buffer, 32, 1);
-		WriteFile(file_destination, buffer, cache, 1);
-	}
-
-	CloseHandle(file_source);
-	CloseHandle(file_destination);
-
-	return true;
-}
 
 public void OnPluginStart(){
 	g_iFlagLetters['a'-'a'] = Admin_Reservation;
@@ -208,6 +180,8 @@ public void OnPluginStart(){
 	AddCommandListener(Command_Recheck, "spec_next");
 	AddCommandListener(Command_Recheck, "spec_player");
 	AddCommandListener(Command_Recheck, "spec_prev");
+
+	RegConsoleCmd("sesja", Command_Session);
 
 	Chat_OnPluginStart();
 

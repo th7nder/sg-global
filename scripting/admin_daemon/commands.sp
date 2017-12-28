@@ -103,3 +103,84 @@ public Action CommandCallback(int iClient, const char[] szCommand, int iArgs){
 
 	return Plugin_Stop;
 }
+
+
+public Action Command_Session(int iClient, int iArgs)
+{
+	if(g_iAdminID[iClient] != -1)
+	{
+		
+		char szQuery[256] = {
+			"SELECT SUM(disconnect - connect) FROM ad_admins_sessions WHERE admin_id=%d and server_id=%d and connect >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 day)) GROUP BY admin_id"
+		}
+		Format(szQuery, sizeof(szQuery), szQuery, g_iAdminID[iClient], g_iServerID);
+		SQL_TQuery(g_hDatabase, Callback_GetSession, szQuery, GetClientSerial(iClient));
+
+	}
+
+	return Plugin_Handled;
+}
+
+
+   
+public Callback_GetSession(Handle hOwner, Handle hResult, const char[] szError, int iSerial)
+{
+	if (hResult == INVALID_HANDLE)
+	{
+		LogError("ADaemon: DirectQuery ERROR, %s", szError);
+		return;	
+	}
+
+	int iClient = GetClientFromSerial(iSerial);
+	if(!IsValidPlayer(iClient))
+		return;
+
+	if(SQL_FetchRow(hResult))
+	{
+		int iLastDiff = SQL_FetchInt(hResult, 0);
+		DisplaySessionInfo(iClient, iLastDiff);
+	}
+	else
+	{
+		DisplaySessionInfo(iClient, 0);
+	}
+
+
+	delete hResult;
+
+}
+
+stock void GetFormattedTime(int iSecs, char[] szDesc, int iMaxSize)
+{
+	Format(szDesc, iMaxSize, "%02dh:%02dm:%02ds", (iSecs / 60) / 60, (iSecs / 60) % 60, ((iSecs % 60) % 60));	
+}
+
+
+public void DisplaySessionInfo(int iClient, int iLastDiff)
+{
+		char szCurrentSession[64];
+		char szLastSessions[64];
+		int iCurrSecs = GetTime() - g_iJoinTime[iClient];
+		GetFormattedTime(iCurrSecs, szCurrentSession, sizeof(szCurrentSession));
+		GetFormattedTime(iLastDiff + iCurrSecs, szLastSessions, sizeof(szLastSessions));
+
+		Panel hPanel = new Panel(null);
+		hPanel.DrawItem("Czas obecnej sesji: ");
+		hPanel.DrawText(szCurrentSession);
+		hPanel.DrawItem("Ostatnie 7 Dni: ");
+		hPanel.DrawText(szLastSessions);
+
+
+		hPanel.Send(iClient, ShowSessionPanel_Handler, 30);
+}
+
+
+public int ShowSessionPanel_Handler(Menu mMenu, MenuAction maAction, int iClient, int iItem){
+    if(maAction == MenuAction_Select){
+        return 0;
+    } else if(maAction == MenuAction_End || maAction == MenuAction_Cancel) {
+        delete mMenu;
+    }
+
+    return 0;
+}
