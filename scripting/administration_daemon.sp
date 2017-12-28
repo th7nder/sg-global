@@ -28,6 +28,8 @@ public Plugin:myinfo =
 
 
 
+char g_szCreateTimesQuery[] = {"CREATE TABLE IF NOT EXISTS `ad_admins_sessions` (`admin_id` int(11) NOT NULL,`connect` int(11) NOT NULL,`disconnect` int(11) NOT NULL, `server_id` int(5) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"}
+
 #define CHAT_PREFIX "  \x06[\x0BAdministration \x07Daemon\x06] "
 #define CHAT_PREFIX_SG "  \x06[\x0BSerwery\x01-\x07GO\x06] "
 #define STRING(%1) %1, 	sizeof(%1)
@@ -44,6 +46,9 @@ public Plugin:myinfo =
 Handle g_hDatabase = INVALID_HANDLE;
 AdminFlag g_iFlagLetters[26];
 
+
+int g_iAdminID[MAXPLAYERS+1] = {-1};
+int g_iJoinTime[MAXPLAYERS+1] = {0};
 bool g_bCustomFlagsInUse = false;
 
 int g_iServerID = -1;
@@ -132,38 +137,7 @@ stock bool:File_Copy(const String:source[], const String:destination[])
 	return true;
 }
 
-public CreateNavFiles()
-{
-	decl String:DestFile[256];
-	decl String:SourceFile[256];
-	Format(SourceFile, sizeof(SourceFile), "maps/replay_bot.nav");
-	if (!FileExists(SourceFile))
-	{
-		LogError("ADaemon Failed to create .nav files. Reason: %s doesn't exist!", SourceFile);
-		return;
-	}
-	decl String:map[256];
-	Handle mapList = CreateArray(64);
-	new mapListSerial = -1;
-	if (ReadMapList(mapList,	mapListSerial, "mapcyclefile", MAPLIST_FLAG_CLEARARRAY|MAPLIST_FLAG_NO_DEFAULT) == INVALID_HANDLE)
-		if (mapListSerial == -1)
-			return;
-	for (new i = 0; i < GetArraySize(mapList); i++)
-	{
-		GetArrayString(mapList, i, map, sizeof(map));
-		if (!StrEqual(map, "", false))
-		{
-			Format(DestFile, sizeof(DestFile), "maps/%s.nav", map);
-			if (!FileExists(DestFile))
-				File_Copy(SourceFile, DestFile);
-		}
-	}
-
-	CloseHandle(mapList);
-}
-
 public void OnPluginStart(){
-	//CreateNavFiles();
 	g_iFlagLetters['a'-'a'] = Admin_Reservation;
 	g_iFlagLetters['b'-'a'] = Admin_Generic;
 	g_iFlagLetters['c'-'a'] = Admin_Kick;
@@ -191,7 +165,6 @@ public void OnPluginStart(){
 	int m_unIP = GetConVarInt(FindConVar("hostip"));
 	Format(STRING(g_szIP), "%d.%d.%d.%d", (m_unIP >> 24) & 0x000000FF, (m_unIP >> 16) & 0x000000FF, (m_unIP >> 8) & 0x000000FF, m_unIP & 0x000000FF);
 	g_iHostPort = GetConVarInt(FindConVar("hostport"));
-	//g_iLoadingStatus = 0;
 	SQL_TConnect(Callback_Connect, "administration_daemon");
 
 	RegAdminCmd("sm_ban", Command_BanClient, ADMFLAG_GENERIC);
@@ -349,6 +322,7 @@ public OnMapStart(){
 
 public void OnClientPutInServer(int iClient){
 	g_bStartedDatabaseLoad[iClient] = false;
+	g_iJoinTime[iClient] = GetTime();
 	if(g_hDatabase != null)
 	{
 		g_bStartedDatabaseLoad[iClient] = true;
@@ -419,6 +393,17 @@ public void ClearUngagTimer(int iClient){
 }
 
 public void OnClientDisconnect(int iClient){
+	if(g_iAdminID[iClient] != -1)
+	{
+		char szQuery[256];
+		char szAuthID[64];
+		int iCurrTime = GetTime();
+		if(GetClientAuthId(iClient, AuthId_Steam2, szAuthID, 64) && iCurrTime > g_iJoinTime[iClient])
+		{
+			Format(szQuery, 256, "INSERT INTO `ad_admins_sessions` (admin_id, connect, disconnect, server_id) VALUES (%d, %d, %d, %d)", g_iAdminID[iClient], g_iJoinTime[iClient], GetTime(), g_iServerID);
+			SQL_TQuery(g_hDatabase, Callback_Empty, szQuery);
+		}
+	}
 	g_iLoadingStatus[iClient] = -1;
 
 	ClearUngagTimer(iClient);
@@ -533,7 +518,7 @@ public Callback_FetchGlobalAdmins(Handle hOwner, Handle hResult, const char[] sz
 		AssignAdmin(szAuthID, szFlags, iImmunity, iClient);
 
 		if(g_iServerID != -1){
-			//PrintToServer( "ServerID Fetching Row")
+			g_iAdminID[iClient] = iID;
 			char szQuery[256];
 			Format(STRING(szQuery), "SELECT flags FROM ad_admins_specific WHERE server=%d AND admin_id=%d", g_iServerID, iID);
 			Handle hPack = CreateDataPack();
@@ -581,32 +566,21 @@ public Callback_FetchSpecificAdmin(Handle hOwner, Handle hResult, const char[] s
 		return;
 	}
 
-	//PrintToServer( "SpecificAdmin g_iLoadingStatus[iClient] %d", g_iLoadingStatus[iClient])
 	if(SQL_FetchRow(hResult)){
 		char szFlags[64];
 		SQL_FetchString(hResult, 0, STRING(szFlags));
 		AssignAdmin(szAuthID, szFlags, iImmunity, iClient);
-		//PrintToServer( "SpecificAdmin FetchRowg_iLoadingStatus[iClient] %d", g_iLoadingStatus[iClient])
 	}
 
 	char szQuery[512];
 	Format(STRING(szQuery), "SELECT client_id, authid, flags FROM ad_clients WHERE authid='%s'", szAuthID);
 	g_iLoadingStatus[iClient]++;
 
-	//PrintToServer( "SpecificAdmin GLobalClients g_iLoadingStatus[iClient] %d", g_iLoadingStatus[iClient])
-
 
 	SQL_TQuery(g_hDatabase, Callback_FetchGlobalClients, szQuery, GetClientSerial(iClient));
 
-	//if(IsClientInGame(iClient) && IsClientAuthorized(iClient)){
-	//	RunAdminCacheChecks(iClient);
-	//	NotifyPostAdminCheck(iClient);
-	//}
 
 	g_iLoadingStatus[iClient]--;
-
-
-	//PrintToServer( "SpecificAdminAfter g_iLoadingStatus[iClient] %d", g_iLoadingStatus[iClient])
 	delete hResult;
 
 	if(strlen(g_szPrefix[iClient]) < 3 && Player_IsAdmin(iClient)){

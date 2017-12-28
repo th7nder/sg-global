@@ -6,6 +6,8 @@ public void OnClientAuthorized(int iClient, const char[] szSteamID){
 	if(IsFakeClient(iClient))
 		return;
 
+	g_iAdminID[iClient] = -1;
+
 	ClearUngagTimer(iClient);
 	ClearUnmuteTimer(iClient);
 
