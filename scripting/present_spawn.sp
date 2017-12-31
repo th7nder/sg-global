@@ -1,24 +1,37 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
+#include <entcontrol>
 
-#define MAXSPAWNS 100
-#define MAXDISTANCE 2000.0
-#define SAFEDISTANCE 1000.0
-#define GIFTCOUNT 2
+#include <codmod301>
+
+#define GIFT_PREFIX "[Prezenty]"
+const int g_iMaxGifts = 2;
+const float g_fTimeStart = 20.0;
+const float g_fTimeEnd = 200.0;
 
 char g_szGiftModel[] = "models/items/cs_gift.mdl"
-float g_fSpawnVec[MAXSPAWNS][3];
-int g_iSpawnCount = 0;
-int g_iGift[GIFTCOUNT];
-int g_iGiftSpawn;
 
+int g_iSpotCount = -1;
+
+int g_iBeamSprite = -1;
+int g_iHaloSprite = -1;
+int g_iBeamColor[] = {255, 255, 0, 255};
+
+
+bool g_bRoundEnd = false;
 
 public OnPluginStart() {
 	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 }
 
 public OnMapStart() {
+
+	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
+    	g_iHaloSprite = PrecacheModel("materials/sprites/halo.vmt");
+
+
 	AddFileToDownloadsTable("models/items/cs_gift.dx80.vtx");
 	AddFileToDownloadsTable("models/items/cs_gift.dx90.vtx");
 	AddFileToDownloadsTable("models/items/cs_gift.mdl");
@@ -27,101 +40,126 @@ public OnMapStart() {
 	AddFileToDownloadsTable("models/items/cs_gift.vvd");
 	AddFileToDownloadsTable("materials/models/items/cs_gift.vmt");
 	AddFileToDownloadsTable("materials/models/items/cs_gift.vtf");
+
 	PrecacheModel(g_szGiftModel);
-	CreateTimer(20.0, RandomSpawn, _, TIMER_FLAG_NO_MAPCHANGE);
+
+        if (EC_Nav_Load())
+        {
+                if (EC_Nav_CachePositions())
+                {
+                        PrintToServer("cached positions");
+                        g_iSpotCount = EC_Nav_GetHidingSpotsCount();
+                }
+                else
+                {
+                        PrintToServer("Unable to cache positions!");
+                }
+        }
+        else
+        {
+                PrintToServer("No Navigation loaded! Make sure the .nav is not packed in one of the .vpk-files.");
+        }
+
+
+	float fRandom = GetRandomFloat(g_fTimeStart, g_fTimeEnd);
+        CreateTimer(fRandom, Timer_SpawnGifts, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Event_RoundStart(Event hEvent, const char[] szEvent, bool bBroadcast) {
-	if(GetClientCount(true) < 8) {
-		//return;
-	}
-
-	if(g_iSpawnCount < 1) {
-		LogError("Brak punktów spawn")
-		return;
-	}
-
-	g_iGiftSpawn = 0;
-	for(int i = 0; i < sizeof(g_iGift); i++) {
-		g_iGift[i] = CreateEntityByName("prop_physics_override");
-		SetEntityModel(g_iGift[i], g_szGiftModel)
-
-		if(DispatchSpawn(g_iGift[i])) {
-			SetEntProp(g_iGift[i], Prop_Send, "m_usSolidFlags",  152);
-			SetEntProp(g_iGift[i], Prop_Send, "m_CollisionGroup", 11);
-		}
-
-		int iSpawn = GetRandomInt(0, g_iSpawnCount);
-		while(iSpawn == g_iGiftSpawn) {
-			iSpawn = GetRandomInt(0, g_iSpawnCount);
-		}
-
-		if (g_fSpawnVec[iSpawn][0] != -1.0 && iSpawn < MAXSPAWNS) {
-			TeleportEntity(g_iGift[i], g_fSpawnVec[iSpawn], NULL_VECTOR, NULL_VECTOR);
-			SDKHook(g_iGift[i], SDKHook_Touch, OnGiftTouch)
-			g_iGiftSpawn = iSpawn;
-		}
-	}
+public Action Event_RoundEnd(Event hEvent, const char[] szEvent, bool bBroadcast)
+{
+	g_bRoundEnd = true;
+	return Plugin_Continue;
 }
+
+public Action Event_RoundStart(Event hEvent, const char[] szEvent, bool bBroadcast) 
+{
+	g_bRoundEnd = false;
+ 
+	return Plugin_Continue;
+}
+
+public Action Timer_SpawnGifts(Handle hTimer)
+{
+	if(!g_bRoundEnd && g_iSpotCount >= g_iMaxGifts && GetClientCount(true) >= 8)
+	{
+		int iAmount = GetRandomInt(1, g_iMaxGifts);
+		for(int i = 0; i < iAmount; i++)
+		{
+			SpawnRandomGift();
+		}
+		PrintCenterTextAll("Na mapie pojawiły się prezenty!");	
+	}
+
+	float fRandom = GetRandomFloat(g_fTimeStart, g_fTimeEnd);
+	CreateTimer(fRandom, Timer_SpawnGifts, _, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+
+
+int SpawnRandomGift()
+{
+	if(g_iSpotCount <= 0) return -1;
+
+	int iEntity = CreateEntityByName("prop_physics_override");
+	SetEntityModel(iEntity, g_szGiftModel)
+
+	if(DispatchSpawn(iEntity)) {
+		SetEntProp(iEntity, Prop_Send, "m_usSolidFlags",  152);
+		SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 11);
+	}
+
+	int iRandom = GetRandomInt(0, g_iSpotCount - 1);
+	float fPos[3];
+	if(EC_Nav_GetHidingSpot(iRandom, fPos))
+	{
+		TeleportEntity(iEntity, fPos, NULL_VECTOR, NULL_VECTOR);
+		float fPosTop[3];
+		fPosTop[0] = fPos[0];
+		fPosTop[1] = fPos[1];
+		fPosTop[2] = fPos[2] + 2000.0;
+		TE_SetupBeamPoints(fPos, fPosTop, g_iBeamSprite, g_iHaloSprite, 0, 66, 15.0, 10.0, 10.0, 1, 0.0, g_iBeamColor, 5);
+   		TE_SendToAll();
+		SDKHook(iEntity, SDKHook_Touch, OnGiftTouch)
+	}
+	else
+	{
+		RemoveEdict(iEntity);
+		iEntity = -1;
+	}
+
+
+	return iEntity;
+}
+
 
 public Action:OnGiftTouch(int iGift, int iClient) {
 	if(!IsValidPlayer(iClient)) {
 		return Plugin_Continue;
 	}
 
-	float fSpeed = GetEntPropFloat(iClient, Prop_Data, "m_flLaggedMovementValue");
+	int iRandom = GetRandomInt(1, 100);
+	if(iRandom <= 40)
+	{
+		int iExp = GetRandomInt(1000, 2000);
+		CodMod_GiveExp(iClient, iExp);
+		PrintToChatAll("%s %N dostał %d expa z prezentu!", GIFT_PREFIX, iClient, iExp);
+
+	}
+	else if(iRandom > 40 && iRandom <= 80)
+	{
+		PrintToChatAll("%s %N znalazł pusty prezent!", GIFT_PREFIX, iClient);
+	}
+	else
+	{
+		int iDogtags = GetRandomInt(5, 10);
+		CodMod_SetDogtagCount(iClient, CodMod_GetDogtagCount(iClient) + iDogtags);
+		PrintToChatAll("%s %N dostał %d nieśmiertelników z prezentu!", GIFT_PREFIX, iClient, iDogtags);
+	}
+
 	RemoveEdict(iGift);
-	SetEntPropFloat(iClient, Prop_Send, "m_flLaggedMovementValue", fSpeed);
-	PrintToChat(iClient, "Podniosłeś prezent")
+
 	return Plugin_Handled
 }
 
-public Action:RandomSpawn(Handle:timer) {
-	CreateTimer(10.0, FindSpawns, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
-}
 
-public Action:FindSpawns(Handle:timer) {
-	if (g_iSpawnCount != MAXSPAWNS) {
-		for (new x = 1; x < GetMaxClients(); x++) {
-			if (!IsValidEdict(x))
-				continue;
 
-			if (GetClientTeam(x) == 3 && IsPlayerAlive(x) && g_iSpawnCount != MAXSPAWNS) {
-				GetClientAbsOrigin(x, g_fSpawnVec[g_iSpawnCount]);
-				g_iSpawnCount++;
-			}
-		}
-	}
-	if (g_iSpawnCount == MAXSPAWNS) {
-		for (new spawnIndex = 0; spawnIndex < MAXSPAWNS; spawnIndex++) {
-			for (new iClient = 1; iClient <= GetMaxClients(); iClient++) {
-				if (!IsClientConnected(iClient))
-					continue;
-
-				if (!IsClientInGame(iClient))
-					continue;
-
-				if (GetClientTeam(iClient) == 1)
-					continue;
-
-				new Float:playerVec[3];
-
-				GetClientAbsOrigin(iClient, playerVec);
-				if (GetVectorDistance(playerVec, g_fSpawnVec[spawnIndex]) > MAXDISTANCE) {
-					//Assign the far player to the list, so he gets some trouble ;)
-					g_fSpawnVec[spawnIndex][0] = playerVec[0];
-					g_fSpawnVec[spawnIndex][1] = playerVec[1];
-					g_fSpawnVec[spawnIndex][2] = playerVec[2];
-				}
-			}
-		}
-	}
-}
-
-stock bool IsValidPlayer(int iClient){
-	if(iClient > 0 && iClient < MAXPLAYERS && IsClientInGame(iClient) && !IsFakeClient(iClient)){
-		return true;
-	}
-
-	return false;
-}
