@@ -50,6 +50,7 @@ AdminFlag g_iFlagLetters[26];
 int g_iAdminID[MAXPLAYERS+1] = {-1};
 int g_iJoinTime[MAXPLAYERS+1] = {0};
 bool g_bCustomFlagsInUse = false;
+bool g_bUseClantag = false;
 
 int g_iServerID = -1;
 char g_szIP[64];
@@ -214,6 +215,8 @@ public void OnClientSettingsChanged(int iClient)
 
 stock void SetTag(int iClient)
 {
+	if(!g_bUseClantag)
+		return;
 	if(IsFakeClient(iClient))
 		return;
 
@@ -421,7 +424,7 @@ stock void StartFetching(){
 
 //	g_iLoadingStatus++;
 	char szQuery[512];
-	Format(STRING(szQuery), "SELECT server_id, custom_flags_in_use FROM ad_servers WHERE ip='%s' AND hostport=%d", g_szIP, g_iHostPort);
+	Format(STRING(szQuery), "SELECT server_id, custom_flags_in_use, use_clantag FROM ad_servers WHERE ip='%s' AND hostport=%d", g_szIP, g_iHostPort);
 	SQL_TQuery(g_hDatabase, Callback_FetchServerID, szQuery);
 
 
@@ -438,9 +441,11 @@ public Callback_FetchServerID(Handle hOwner, Handle hResult, const char[] szErro
 
 
   g_bCustomFlagsInUse = false;
+  g_bUseClantag = false;
   if(SQL_FetchRow(hResult)){
 	g_iServerID = SQL_FetchInt(hResult, 0);
 	g_bCustomFlagsInUse = view_as<bool>(SQL_FetchInt(hResult, 1));
+	g_bUseClantag = view_as<bool>(SQL_FetchInt(hResult, 2));
 	char szAuthID[64];
 	for(int i = 1; i <= MaxClients; i++){
 		if(IsClientInGame(i) && IsClientAuthorized(i) && !IsFakeClient(i) && !g_bStartedDatabaseLoad[i] && GetClientAuthId(i, AuthId_Steam2, STRING(szAuthID))){
