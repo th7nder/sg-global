@@ -54,14 +54,18 @@ public Action Event_OnPlayerTeam(Handle hEvent, const char[] name, bool dontBroa
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if (!IsValidClient(iClient) || IsFakeClient(iClient))
 		return Plugin_Continue;
-	int iTeam = GetEventInt(hEvent, "team");
+
+	g_bSpectate[iClient] = true;
+	return Plugin_Continue;
+
+	/*int iTeam = GetEventInt(hEvent, "team");
 	if (iTeam == CS_TEAM_SPECTATOR)
 	{
 		g_bSpectate[iClient] = true;
 	} else {
 		g_bSpectate[iClient] = false
 	}
-	return Plugin_Continue;
+	return Plugin_Continue;*/
 }
 
 
