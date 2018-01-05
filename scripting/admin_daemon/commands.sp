@@ -111,7 +111,7 @@ public Action Command_Session(int iClient, int iArgs)
 	{
 		
 		char szQuery[256] = {
-			"SELECT SUM(disconnect - connect) FROM ad_admins_sessions WHERE admin_id=%d and server_id=%d and connect >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 day)) GROUP BY admin_id"
+			"SELECT SUM(disconnect - connect) FROM ad_admins_sessions WHERE admin_id=%d and server_id=%d and connect >= UNIX_TIMESTAMP(DATE_SUB(DATE(NOW()), INTERVAL DAYOFWEEK(NOW())-1 DAY)) GROUP BY admin_id"
 		}
 		Format(szQuery, sizeof(szQuery), szQuery, g_iAdminID[iClient], g_iServerID);
 		SQL_TQuery(g_hDatabase, Callback_GetSession, szQuery, GetClientSerial(iClient));
@@ -120,7 +120,6 @@ public Action Command_Session(int iClient, int iArgs)
 
 	return Plugin_Handled;
 }
-
 
    
 public Callback_GetSession(Handle hOwner, Handle hResult, const char[] szError, int iSerial)
@@ -167,7 +166,7 @@ public void DisplaySessionInfo(int iClient, int iLastDiff)
 		Panel hPanel = new Panel(null);
 		hPanel.DrawItem("Czas obecnej sesji: ");
 		hPanel.DrawText(szCurrentSession);
-		hPanel.DrawItem("Ostatnie 7 Dni: ");
+		hPanel.DrawItem("Ostatnie 7 Dni(od niedzieli): ");
 		hPanel.DrawText(szLastSessions);
 
 
