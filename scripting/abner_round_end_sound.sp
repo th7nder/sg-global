@@ -45,21 +45,23 @@ char g_szSoundNames[][] = {
 	"10.mp3",
 	"11.mp3",
 	"12.mp3",
+	"13.mp3"
 };
 
 char g_szSoundTracks[][] = {
-	"Chris Rea - Driving home for christmas",
-	"weedmau5 - Jingle Bells (2015)",
-	"Wham! - Last Christmas ",
-	"Paul McCartney - Wonderful Christmas Time",
-	"John Lennon - Happy Christmas",
-	"Shakin' Stevens - Merry Christmas Everyone (Krysiek Remix)",
-	"Krysiek & Marshall - Gdy się Chrystus rodzi",
-	"Czerwone gitary - jest taki dzień ! + text",
-	"Shakin Stevens - Merry Christmas Everyone",
-	" Coca-Cola Christmas Song by Melanie Thornton - Wonderful Dream Holidays Are Coming",
-	" Train - Shake up Christmas",
-	" Dean Martin - Let it Snow!",
+	"Brennan Savage - Look At Me Now",
+	"Busta Rhymes - Touch It Deep Remix",
+	"Epic Rock - Eye of the Storm",
+	"Fast Furious 6 - We own it 2 Chainz",
+	"G-Eazy - The Beautiful",
+	"K2 ft Buka - One moment",
+	"Killy Kennedy Rd",
+	"Naughty Boy - Runnin Lose",
+	"Quebonafide - quebahombre",
+	"Sabaton - Resist And Bite",
+	"Taco Hemingway - Tlen",
+	"Tiesto - Secrets Instant Party Remix",
+	"Tokyo Drift - Teriyaki Boyz",
 };
 
 
@@ -69,7 +71,7 @@ public OnPluginStart()
 {
 	//Cvars
 	CreateConVar("abner_round_end_version", PLUGIN_VERSION, "Version of the plugin", FCVAR_NOTIFY|FCVAR_REPLICATED);
-	g_hTRPath = CreateConVar("tr_music_path_grudzien17", "serwery-go/grudzien17", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
+	g_hTRPath = CreateConVar("tr_music_path_styczen18", "serwery-go/styczen18", "Path of TT sounds in /cstrike/sound", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
 
 	//ClientPrefs
 	g_AbNeRCookie = RegClientCookie("RoundSound Sounds", "", CookieAccess_Private);
