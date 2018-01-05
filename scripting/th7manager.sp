@@ -88,7 +88,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
     CreateNative("TH7_SetPlayerMaxSpeed", Native_SetPlayerMaxSpeed);
     CreateNative("TH7_GetPlayerMaxSpeed", Native_GetPlayerMaxSpeed);
     CreateNative("TH7_IsRenderColorEnabled", Native_IsRenderColorEnabled);
+    CreateNative("TH7_GetInvisible", Native_GetInvisible);
     return APLRes_Success;
+}
+
+public int Native_GetInvisible(Handle hPlugin, int iNumParams)
+{
+    int iClient = GetNativeCell(1);
+    return (g_bInvisible[iClient] && g_bWeaponInvisible[iClient]);
 }
 
 public int Native_GetPlayerMaxSpeed(Handle hPlugin, int iNumParams){
