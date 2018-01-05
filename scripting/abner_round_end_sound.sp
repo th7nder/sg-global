@@ -188,7 +188,7 @@ int GetSoundID(char[] szName){
 	int iSize = sizeof(g_szSoundNames);
 	char szTemp[128];
 	for(int i = 0; i < iSize; i++){
-		Format(szTemp, 128, "serwery-go/grudzien17/%s", g_szSoundNames[i]);
+		Format(szTemp, 128, "serwery-go/styczen18/%s", g_szSoundNames[i]);
 		if(StrEqual(szName, szTemp)){
 			return i;
 		}

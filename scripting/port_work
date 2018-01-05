@@ -1,0 +1,7 @@
+iptables -F
+iptables -t nat -F
+sudo iptables -t nat -A PREROUTING -p udp --dport 27015 -j DNAT --to-destination 212.91.27.165:27015
+sudo iptables -t nat -A POSTROUTING -p udp -d 212.91.27.165 --dport 27015 -j SNAT --to-source 54.37.235.102
+
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+sudo sysctl -p
