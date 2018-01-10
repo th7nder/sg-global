@@ -1,0 +1,12 @@
+SELECT SUM(disconnect - connect) FROM ad_admins_sessions WHERE connect >= UNIX_TIMESTAMP(DATE_SUB(DATE(NOW()), INTERVAL DAYOFWEEK(NOW())+6 DAY)) GROUP BY admin_id
+
+
+
+
+SELECT ad_admins.name, ROUND(((SUM(disconnect - connect) / 60) / 60), 2) as omg , ad_servers.server_name FROM ad_admins_sessions
+        INNER JOIN ad_admins ON `ad_admins_sessions`.`admin_id`=`ad_admins`.`admin_id`
+        INNER JOIN ad_servers on `ad_admins_sessions`.`server_id`=`ad_servers`.`server_id`
+        WHERE connect >= UNIX_TIMESTAMP(DATE_SUB(DATE(NOW()), INTERVAL DAYOFWEEK(NOW())+6 DAY))
+        GROUP BY `ad_admins_sessions`.admin_id, `ad_servers`.server_id ORDER BY `ad_servers`.server_id, omg DESC;
+
+
