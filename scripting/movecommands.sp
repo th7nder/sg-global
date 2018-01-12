@@ -271,8 +271,6 @@ public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 
 public Action Command_AFK(int client, int args)
 {
-	if(g_bIsDeathrun)
-		return;
 	if(!cEnableAFK.BoolValue)
 		return;
 	
@@ -281,6 +279,12 @@ public Action Command_AFK(int client, int args)
 	
 	if(g_bSwapPlayerDeath[client])
 		return;
+	
+	if(IsClientInGame(client) && g_bIsDeathrun && GetClientTeam(client) == CS_TEAM_T)
+	{
+		return;
+	}
+
 	
 	if(GetClientTeam(client) != CS_TEAM_SPECTATOR)
 	{
